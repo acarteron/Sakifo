@@ -1,0 +1,17 @@
+{
+    "priorities": [
+	"internet",
+	"domassist_tablet",
+	"vera",
+	"sensors"
+    ],
+    "internet":["heartbeatAlert"],
+    "domassist_tablet":[
+	"shutdownAlert",
+	"startDomassist",
+	"tabletRestarted"],
+    "vera":[],
+    "sensors":["batteryAlert",
+	       "batteryWarning",
+	       "commfailureAlert"]
+}
