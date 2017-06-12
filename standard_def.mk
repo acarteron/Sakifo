@@ -9,7 +9,7 @@ DIR_LIB=lib
 DIR_HDR=includes
 DIR_DOC=doc
 DIR_IN=libSakifo
-DIR_LK=/home/adcarter/Documents/these/ServicesKabare/AlainPeters
+DIR_LK=/opt/AlainPeters
 
 ## Compilation
 GXX=g++
