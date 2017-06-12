@@ -1,5 +1,6 @@
 #include "requests/requesthandlerfactory.hh"
 #include "requests/handleget.hh"
+#include "requests/handlepost.hh"
 
 #include <iostream>
 
@@ -15,9 +16,9 @@ void RequestHandlerFactory::poco_log(std::string log_){
   app.logger().information(log_);
 }
 Poco::Net::HTTPRequestHandler* RequestHandlerFactory::switch_Method(std::string method_){
-  std::cout<<method_<<std::endl;
+  // std::cout<<method_<<std::endl;
   if(method_.compare("POST")==0){
-    return NULL;
+    return new HandlePost;
   }else{
     if(method_.compare("GET")==0){
       return new HandleGet;
