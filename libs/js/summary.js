@@ -25,9 +25,9 @@ function displaySummary(summary){
    
     for(var i = 0 ; i < results.length ; i ++) {
 	var test_res=results[i];
-	//var begin_panel="<div class=\"panel panel-default\"><div class=\"panel-heading\"><h4 class=\"panel-title\"><a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse"+i+"\">";
+	var begin_panel="<div class=\"panel panel-default\"><div class=\"panel-heading\"><h4 class=\"panel-title\"><a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#collapse"+i+"\">";
 
-	var begin_panel="<div class=\"panel panel-default\"><div class=\"panel-heading\"><h4 class=\"panel-title\"><a data-toggle=\"collapse\" href=\"#collapse"+i+"\">";
+	//var begin_panel="<div class=\"panel panel-default\"><div class=\"panel-heading\"><h4 class=\"panel-title\"><a data-toggle=\"collapse\" href=\"#collapse"+i+"\">";
 	
 	var end_panel_header="</a></h4></div><div id=\"collapse"+i+"\" class=\"panel-collapse collapse\"><div class=\"panel-body\">";
 	var end_panel="</div></div></div>";
