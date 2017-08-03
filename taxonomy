@@ -1,0 +1,41 @@
+{
+	"Door": {
+		"location": "Entrance"
+	},
+	"Cupboard": {
+		"location": "Kitchen"
+	},
+	"Fridge": {
+		"location": "Kitchen"
+	},
+	"Stove": {
+		"location": "Kitchen"
+	},
+	"CoffeeMaker":{
+		"location": "Kitchen"
+	},
+	"NightTime": {
+		"location": "Night",
+		"kind": "Calendar"
+	},
+	"LunchTime": {
+		"location": "Lunch",
+		"kind": "Calendar"
+	},
+	"BreakfastTime":{
+		"location": "Breakfast",
+		"kind": "Calendar"
+	},
+	"BedTime":{
+		"location": "Bed",
+		"kind": "Calendar"
+	},
+	"DressingTime":{
+		"location": "Dressing",
+		"kind": "Calendar"
+	},
+	"WakeUpTime":{
+		"location": "WakeUp",
+		"kind": "Calendar"
+	}
+}

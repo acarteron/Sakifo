@@ -39,6 +39,8 @@ private:
   int mongo_port=27017;
 
   std::string main_page();
+  std::string rulemanager_page();
+  
   std::pair<std::string,std::string> get_file(const std::string&);
 
   std::string get_streams_rules_collection(std::vector<std::string>);

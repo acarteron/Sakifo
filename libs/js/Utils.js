@@ -102,9 +102,9 @@ function getSomething(callback,url){
 function getSomethingArgs(callback,url,args){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-	// if(xhttp.readyState == 1){
-	// 	document.getElementById("demo").innerHTML = "<div class=\"wrapperloading\">  <div class=\"loading up\"></div>  <div class=\"loading down\"></div></div>";
-	// }
+	if(xhttp.readyState == 1){
+		document.getElementById("demo").innerHTML = "<div class=\"wrapperloading\">  <div class=\"loading up\"></div>  <div class=\"loading down\"></div></div>";
+	}
 	// if(xhttp.readyState == 2){
 	// 	//document.getElementById("demo").innerHTML = "lolilol";
 	// }
@@ -113,11 +113,12 @@ function getSomethingArgs(callback,url,args){
 	// }
 	if (xhttp.readyState == 4 && xhttp.status == 200) {
 	    var myArr = JSON.parse(xhttp.responseText);
+	    document.getElementById("demo").innerHTML = "";
 	    callback(myArr);
 	}
     }
     xhttp.open("POST",url, true);
     xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.setRequestHeader("Data-type", "text");
+    xhttp.setRequestHeader("Data-type", "json");
     xhttp.send(JSON.stringify(args));
 }

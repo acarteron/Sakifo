@@ -67,7 +67,7 @@ int Mongodb::save_rule_result(const std::string & host,
 			      int port,
 			      const std::string & rule_streams,
 			      const std::string & db_name){
-  //std::cout<<rule_streams<<std::endl;
+  std::cout<<rule_streams<<std::endl;
   //decrypt rule_stream
   Poco::JSON::Parser      parser;
   Poco::Dynamic::Var      str_var;

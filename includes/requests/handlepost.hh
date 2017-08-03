@@ -30,14 +30,16 @@
 class HandlePost: public Poco::Net::HTTPRequestHandler{
 
 private:
+  const std::string esper_srv="http://localhost:8080";
   void poco_log(std::string);
-  bool switch_URI(Poco::Net::HTTPServerRequest& );
+  std::string switch_URI(Poco::Net::HTTPServerRequest& );
+  std::string setRule(std::string);
   bool check_content_type(std::string,std::string);
   
   std::string mongo_host="mongostr";
   int mongo_port=27017;
   std::string mongo_base="Streams";
-  
+  std::string send_request(std::string);
 public:
   /** \brief Void constructor
    * 
