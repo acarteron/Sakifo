@@ -30,7 +30,7 @@
 class HandlePost: public Poco::Net::HTTPRequestHandler{
 
 private:
-  const std::string esper_srv="http://localhost:8080";
+  const std::string esper_srv="http://alerting:8080";
   void poco_log(std::string);
   std::string switch_URI(Poco::Net::HTTPServerRequest& );
   std::string setRule(std::string);
