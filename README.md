@@ -31,9 +31,9 @@ to full clean:
 TODO
 ====
 
-Fix force write rule (it always force write)
+~~Fix force write rule (it always force write)~~
 
-Add rule order management following order.json file structure (see sati project)
+~~Add rule order management following order.json file structure (see sati project)~~?
 
 DONE
 ====
