@@ -31,6 +31,8 @@ to full clean:
 TODO
 ====
 
+replace Poco::JSON by nlohmann::json
+
 ~~Fix force write rule (it always force write)~~
 
 ~~Add rule order management following order.json file structure (see sati project)~~?
