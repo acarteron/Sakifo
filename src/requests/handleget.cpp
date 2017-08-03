@@ -35,8 +35,8 @@ std::pair<std::string,std::string> HandleGet::switch_URI(Poco::Net::HTTPServerRe
   Poco::URI uri(request.getURI());
   std::vector < std::string >  segments;
   uri.getPathSegments(segments);
-  for(size_t i(0);i<segments.size();++i)
-    std::cout<<"segments: "<<segments[i]<<std::endl;
+  // for(size_t i(0);i<segments.size();++i)
+  //   std::cout<<"segments: "<<segments[i]<<std::endl;
 
   if(segments.size()==0){
     return std::make_pair("text/html",main_page());
@@ -47,10 +47,8 @@ std::pair<std::string,std::string> HandleGet::switch_URI(Poco::Net::HTTPServerRe
     // Time yesterday(hoi.get_timestamp_ms()-86400000);
     // std::cout<<"     "<<yesterday.get_day_str()<<std::endl;
     liba.do_what_you_do(segments[1]/*yesterday.get_day_str()*/);
-    std::string report=liba.getDailyReport_as_string();
-    std::cout<<report<<std::endl;
     return std::make_pair("application/json",
-			  report);
+			  liba.getDailyReport_as_string());
   }else{
     if(segments[0].compare("rulemanager")==0){
       return std::make_pair("text/html",rulemanager_page());
