@@ -11,7 +11,7 @@
 #include <iostream>
 
 HandlePost::HandlePost(){
-  Files file("data/db.json");
+  Files file("/opt/Sati/db.json");
   std::string db_param=file.readFile();
   file.closeFile();
   Poco::JSON::Parser      parser;
