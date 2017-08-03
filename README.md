@@ -31,6 +31,7 @@ to full clean:
 TODO
 ====
 
+Add rule order management following order.json file structure (see sati project)
 
 DONE
 ====
