@@ -31,9 +31,6 @@
 #include <Poco/Path.h>
 #include <Poco/URI.h>
 #include <Poco/Exception.h>
-#include <Poco/JSON/JSON.h>
-#include <Poco/JSON/Parser.h>
-#include <Poco/Dynamic/Var.h>
 #include <map>
 
 class Request{

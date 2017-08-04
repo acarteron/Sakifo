@@ -18,8 +18,8 @@
  *
  */
 
-#ifndef UTILS_HPP
-#define UTILS_HPP
+#ifndef TOOLS_HPP
+#define TOOLS_HPP
 
 #include <sstream>
 #include <cmath>

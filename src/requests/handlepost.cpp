@@ -1,9 +1,9 @@
 #include "requests/handlepost.hh"
 #include "requests/request.hh"
 
-#include "database/mongodb.hh"
+//#include "database/mongodb.hh"
 #include "data/Utils.hpp"
-#include "Utils.hpp"
+#include "Tools.hpp"
 #include "files/files.hh"
 #include "libzamzama.hh"
 #include <Poco/URI.h>
@@ -14,18 +14,14 @@ HandlePost::HandlePost(){
   Files file("/opt/Sati/db.json");
   std::string db_param=file.readFile();
   file.closeFile();
-  Poco::JSON::Parser      parser;
-  Poco::Dynamic::Var      str_var;
-  Poco::JSON::Object::Ptr str_obj;
   
-  str_var = parser.parse(db_param);
-  str_obj = str_var.extract<Poco::JSON::Object::Ptr>();
-  str_var = str_obj->get("host");
-  mongo_host=str_var.toString();
-  str_var=str_obj->get("port");
-  mongo_port=Utils::stringTo<int>(str_var.toString());
-  str_var=str_obj->get("streams_collection");
-  mongo_base=str_var.toString();  
+  nlohmann::json j=nlohmann::json::parse(db_param);
+  mongo_host=j["mongo_host"].get<std::string>();
+  mongo_port=j["mongo_port"].get<int>();
+  mongo_base=j["streams_collection"].get<std::string>();
+
+  esper_srv="http://"+j["kayamb_host"].get<std::string>()+":"+Utils::toString<int>(j["kayamb_port"].get<int>());
+  std::cout<<esper_srv<<std::endl;
 }
 void HandlePost::handleRequest(Poco::Net::HTTPServerRequest& request,
 			       Poco::Net::HTTPServerResponse& response){
@@ -72,76 +68,66 @@ std::string HandlePost::send_request(std::string req){
 }
 std::string HandlePost::setRule(std::string stream){
   std::cout<<"Stream "<<stream<<std::endl;
-    Poco::JSON::Parser      parser;
-    Poco::Dynamic::Var      str_var;
-    Poco::JSON::Object::Ptr str_obj;
-    Poco::Dynamic::Var      rule_name_var;
-    Poco::Dynamic::Var      expression_var;
-    Poco::Dynamic::Var      kind_var;
-    Poco::Dynamic::Var      force_var;
-    str_var = parser.parse(stream);
-    parser.reset();
-    str_obj = str_var.extract<Poco::JSON::Object::Ptr>();
+  
+  std::string rule_name="";
+  std::string expression="";
+  std::string kind="";
+  std::string force="";
 
-    rule_name_var = str_obj->get("name");
-    expression_var = str_obj->get("expression");
-    kind_var = str_obj->get("kind");
-    force_var = str_obj->get("force");
+  nlohmann::json j=nlohmann::json::parse(stream);
+  rule_name=j["name"].get<std::string>();
+  expression=j["expression"].get<std::string>();
+  kind=j["kind"].get<std::string>();
+  force=j["force"].get<bool>()?"true":"false";
 
-    std::cout<<" "<<rule_name_var.toString()<<" "<<force_var.toString()<<" "<<kind_var.toString()<<std::endl;
-    std::vector<std::string> splited;
-    std::vector<std::string> splited_=Utils::splitString(expression_var.toString(),'\n');
-
-    //remove spaces
-    for(size_t i(0);i<splited_.size();++i){
-      if(splited_[i].compare("")!=0)
-	splited.push_back(splited_[i]);
-    }
-
+  //std::cout<<" "<<rule_name<<" "<<force<<" "<<kind<<std::endl;
+  std::vector<std::string> splited;
+  std::vector<std::string> splited_=Utils::splitString(expression,'\n');
+  //remove spaces
+  for(size_t i(0);i<splited_.size();++i){
+    if(splited_[i].compare("")!=0)
+      splited.push_back(splited_[i]);
+  }
     
-    std::string req="{\"source\":\"rule\",\"type\":\"rule\",\"name\":";
-    req+="\""+rule_name_var.toString()+"\",";
-    req+="\"force_write\":\"";
-    req+=force_var.toString()+"\",";
-    req+="\"expression\":[";
+  std::string req="{\"source\":\"rule\",\"type\":\"rule\",\"name\":";
+  req+="\""+rule_name+"\",";
+  req+="\"force_write\":\"";
+  req+=force+"\",";
+  req+="\"expression\":[";
     
-    if(kind_var.toString().compare("ast")==0){
-      std::cout<<splited[0]<<std::endl;
-      std::pair<std::vector<std::string>,
-		std::vector<std::string>> res=
-	zamzama::compile(rule_name_var.toString(),splited[0]);
-      std::vector<std::string> rules=res.first;
-      std::vector<std::string> err=res.second;
-
-      std::cout<<"lol "<<err.size()<<std::endl;
-
-      if(err.size()>0){
-	std::string ret="";
-	for(size_t i(0);i<err.size();++i){
-	  std::cout<<err[i]<<std::endl;
-	  ret+=err[i]+"\n";
-	}
-	std::cout<<ret<<std::endl;
-	      
-	return ret;
+  if(kind.compare("ast")==0){
+    //std::cout<<splited[0]<<std::endl;
+    std::pair<std::vector<std::string>,
+	      std::vector<std::string>> res=
+      zamzama::compile(rule_name,splited[0]);
+    std::cout<<"sdasda"<<std::endl;
+    std::vector<std::string> rules=res.first;
+    std::vector<std::string> err=res.second;
+    //std::cout<<"lol "<<err.size()<<std::endl;
+    if(err.size()>0){
+      std::string ret="";
+      for(size_t i(0);i<err.size();++i){
+	//std::cout<<err[i]<<std::endl;
+	ret+=err[i]+"\n";
       }
-      
-      std::string frule="";
-      for(size_t i(0);i<rules.size()-1;++i)
-        req+="\""+rules[i]+"\",";
-      req+="\""+rules[rules.size()-1]+"\"";
+      //std::cout<<ret<<std::endl;	      
+      return ret;
+    }    
+    std::string frule="";
+    for(size_t i(0);i<rules.size()-1;++i)
+      req+="\""+rules[i]+"\",";
+    req+="\""+rules[rules.size()-1]+"\"";
      
-    }else{
-      if(kind_var.toString().compare("epl")==0){
-	for(size_t i(0);i<splited.size()-1;++i)
-	  req+="\""+splited[i]+"\",";
-	req+="\""+splited[splited.size()-1]+"\"";
-      }
+  }else{
+    if(kind.compare("epl")==0){
+      for(size_t i(0);i<splited.size()-1;++i)
+	req+="\""+splited[i]+"\",";
+      req+="\""+splited[splited.size()-1]+"\"";
     }
-    req+="]}";
-    std::cout<<req<<std::endl;
-    return send_request(req);
-      
+  }
+  req+="]}";
+  std::cout<<req<<std::endl;
+  return send_request(req);     
 }
 
 std::string HandlePost::switch_URI(Poco::Net::HTTPServerRequest& request){
@@ -160,43 +146,43 @@ std::string HandlePost::switch_URI(Poco::Net::HTTPServerRequest& request){
   if(segments[0].compare("rulemanager")==0){
     return setRule(str);    
   }else{
-    if(Utils::find_in_vector_str(segments,"StreamEvent")==0){
-      StreamEvent ev(data::Utils::extract_StreamType(str,"StreamEvent"));
-      //std::cout<<ev.toString()<<std::endl;
-      if(Mongodb::save_stream_event(mongo_host,mongo_port,ev,"StreamEvent",mongo_base)==0)
-	return "true";
-      else
-	return "false";
-    }else{
-      if(Utils::find_in_vector_str(segments,"CommFailure")==0){
-	StreamEvent ev(data::Utils::extract_StreamType(str,"CommFailure"));
-	//std::cout<<ev.toString()<<std::endl;
+    // if(Utils::find_in_vector_str(segments,"StreamEvent")==0){
+    //   StreamEvent ev(data::Utils::extract_StreamType(str,"StreamEvent"));
+    //   //std::cout<<ev.toString()<<std::endl;
+    //   if(Mongodb::save_stream_event(mongo_host,mongo_port,ev,"StreamEvent",mongo_base)==0)
+    // 	return "true";
+    //   else
+    // 	return "false";
+    // }else{
+    //   if(Utils::find_in_vector_str(segments,"CommFailure")==0){
+    // 	StreamEvent ev(data::Utils::extract_StreamType(str,"CommFailure"));
+    // 	//std::cout<<ev.toString()<<std::endl;
 
-	if(Mongodb::save_stream_event(mongo_host,mongo_port,ev,"CommFailure",mongo_base)==0)
-	  return "true";
-	else
-	  return "false";
-      }else{
-	if(Utils::find_in_vector_str(segments,"BatteryLevel")==0){
-	  StreamEvent ev(data::Utils::extract_StreamType(str,"BatteryLevel"));
-	  //std::cout<<ev.toString()<<std::endl;
-	  if(Mongodb::save_stream_event(mongo_host,mongo_port,ev,"BatteryLevel",mongo_base)==0)
-	    return "true";
-	  else
-	    return "false";
-	}else{
-	  if(Utils::find_in_vector_str(segments,"Events")==0){
-	    if(Mongodb::save_rule_result(mongo_host,mongo_port,str,mongo_base)==0)
-	      return "true";
-	    else{
-	      return "false";
-	    }
-	  }else{
-	    return "false";
-	  }
-	}
-      }
-    }
+    // 	if(Mongodb::save_stream_event(mongo_host,mongo_port,ev,"CommFailure",mongo_base)==0)
+    // 	  return "true";
+    // 	else
+    // 	  return "false";
+    //   }else{
+    // 	if(Utils::find_in_vector_str(segments,"BatteryLevel")==0){
+    // 	  StreamEvent ev(data::Utils::extract_StreamType(str,"BatteryLevel"));
+    // 	  //std::cout<<ev.toString()<<std::endl;
+    // 	  if(Mongodb::save_stream_event(mongo_host,mongo_port,ev,"BatteryLevel",mongo_base)==0)
+    // 	    return "true";
+    // 	  else
+    // 	    return "false";
+    // 	}else{
+    // 	  if(Utils::find_in_vector_str(segments,"Events")==0){
+    // 	    if(Mongodb::save_rule_result(mongo_host,mongo_port,str,mongo_base)==0)
+    // 	      return "true";
+    // 	    else{
+    // 	      return "false";
+    // 	    }
+    // 	  }else{
+    return "false";
+    // 	  }
+    // 	}
+    //   }
+    // }
   }
   // return false;
 }

@@ -17,7 +17,7 @@ DIR_ZZ=/opt/Zamzama
 ## Compilation
 GXX=g++
 # Flags for linking
-CFLAGS= -L$(DIR_AP)/$(DIR_LIB) -L$(DIR_ZZ)/$(DIR_LIB) -ldl -lPocoFoundation -lPocoNet -lPocoJSON -lPocoXML  -lPocoUtil -lPocoMongoDB -lAlainPeters -lZamzama -Wl,-rpath,$(DIR_AP)/$(DIR_LIB) -Wl,-rpath,$(DIR_ZZ)/$(DIR_LIB)
+CFLAGS= -L$(DIR_AP)/$(DIR_LIB) -L$(DIR_ZZ)/$(DIR_LIB) -ldl -lPocoFoundation -lPocoNet -lPocoUtil -lPocoMongoDB -lAlainPeters -lZamzama -Wl,-rpath,$(DIR_AP)/$(DIR_LIB) -Wl,-rpath,$(DIR_ZZ)/$(DIR_LIB)
 # Flags for objects
 CFLAGS_OBJ=-I $(ROOT)/$(DIR_HDR) -I $(DIR_AP)/$(DIR_HDR) -I $(DIR_ZZ)/$(DIR_HDR) -O2 -Wall -Wextra -std=c++14 
 # Flags for libraries objects
