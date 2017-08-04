@@ -1,7 +1,8 @@
 #ifndef DATA_UTILS_HH
 #define DATA_UTILS_HH
 
-#include <nlohmann/json.hpp>
+//#include <nlohmann/json.hpp>
+#include <json.hpp>
 
 namespace data{
   class Utils{
