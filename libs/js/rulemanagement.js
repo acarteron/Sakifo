@@ -7,6 +7,7 @@ function submitedRule(args){
     modal.addHtml("",res);
     document.getElementById("modals").innerHTML = modal.getModal();
     $('#myModal').modal('show');
+    load_js("loadmaterial.js");
 }
 function loadRuleAST(){
     var rulename=document.getElementById("Nameform").value;
@@ -18,7 +19,8 @@ function loadRuleAST(){
 	var modal=new Modal();
 	modal.addHtml("Warning","AST form rule and EPL Esper form rule cannot have content at the same time, you must choose");
 	document.getElementById("modals").innerHTML = modal.getModal();
-	$('#myModal').modal('show');	
+	$('#myModal').modal('show');
+	load_js("loadmaterial.js");
     }else{
 	var rule={}
 	rule["name"]=rulename;
@@ -30,6 +32,40 @@ function loadRuleAST(){
 	    rule["kind"]="epl";
 	    rule["expression"]=ruleeplname;
 	}
-	getSomethingArgs(submitedRule,"/rulemanager",rule);
+	postSomething(submitedRule,"/rulemanager",rule);
     }
+}
+function submitedRemoveRule(args){
+    var modal=new Modal();
+    var res="";
+    if( args["request"] !== "false" ){
+	modal.addHtml("","rule "+args["request"]+" deleted");
+    }else{
+	modal.addHtml("","rule could not be deleted");
+    }
+    document.getElementById("modals").innerHTML = modal.getModal();
+    $('#myModal').modal('show');
+    load_js("loadmaterial.js");
+}
+function confirmRemoveRule(){
+    var ruleName="";
+    ruleName=document.getElementById("rmRuleRef").value;
+    if(ruleName !== "")
+	deleteSomething(submitedRemoveRule,"/rule/"+ruleName);
+}
+function rmRuleManagement(rulelst){
+    var form=new Formular();
+    var rulesnames=[];
+    rulesnames.push('');
+    for( i = 0 ; i < rulelst['rules'].length ; i++ ){
+	rulesnames.push(rulelst['rules'][i]['name']);
+    }
+    form.addHtml("<legend>Remove rule</legend>");
+    form.addSelect("rmRuleRef",rulesnames,"rmRule");
+    form.addButton({"id":"confrmRule","onclick":"confirmRemoveRule()","value":"rmRule","name":"Remove"});
+    document.getElementById("rulemngr").innerHTML=form.getForm();
+    load_js("loadmaterial.js");
+}
+function removeRules(){
+    getSomething(rmRuleManagement,"/rules");
 }

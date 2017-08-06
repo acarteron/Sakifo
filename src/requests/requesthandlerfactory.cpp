@@ -1,6 +1,7 @@
 #include "requests/requesthandlerfactory.hh"
 #include "requests/handleget.hh"
 #include "requests/handlepost.hh"
+#include "requests/handledelete.hh"
 
 #include <iostream>
 
@@ -27,7 +28,7 @@ Poco::Net::HTTPRequestHandler* RequestHandlerFactory::switch_Method(std::string 
 	return NULL;
       }else{
 	if(method_.compare("DELETE")==0){
-	  return NULL;
+	  return new HandleDelete;
 	}else{
 	  return NULL;
 	}

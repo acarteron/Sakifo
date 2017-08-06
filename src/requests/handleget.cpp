@@ -8,7 +8,18 @@
 #include "html/html.hh"
 #include "data/time.hh"
 
+#include "database/mongodb.hh"
+
 HandleGet::HandleGet(){
+  Files file("/opt/Sati/db.json");
+  std::string db_param=file.readFile();
+  file.closeFile();
+  
+  nlohmann::json j=nlohmann::json::parse(db_param);
+  mongo_host=j["mongo_host"].get<std::string>();
+  mongo_port=j["mongo_port"].get<int>();
+  mongo_stream_base=j["streams_collection"].get<std::string>();
+  mongo_rule_base=j["rules_collection"].get<std::string>();
 }
 
 void HandleGet::handleRequest(Poco::Net::HTTPServerRequest& request,
@@ -52,11 +63,29 @@ std::pair<std::string,std::string> HandleGet::switch_URI(Poco::Net::HTTPServerRe
   }else{
     if(segments[0].compare("rulemanager")==0){
       return std::make_pair("text/html",rulemanager_page());
+    }else{
+      if(segments[0].compare("rules")==0){
+	return std::make_pair("text/html",get_rule_list());
+      }
     }
   }
   
   return get_file(URI_);
 }
+std::string HandleGet::get_rule_list(){
+  std::string rule_col=apeters::Mongodb::get_collections(mongo_host,
+							 mongo_port,
+							 mongo_rule_base);
+  nlohmann::json j=nlohmann::json::parse(rule_col);
+  nlohmann::json::iterator it = j.begin();
+  std::string rule_lst=apeters::Mongodb::get_rules(mongo_host,
+						   mongo_port,
+						   it.value().get<std::string>(),
+						   mongo_rule_base);
+  //std::cout<<rule_lst<<std::endl;
+  return "{\"rules\":"+rule_lst+"}";
+}
+
 std::pair<std::string,std::string> HandleGet::get_file(const std::string& path_){
   Files file;
   std::string file_path=".";
@@ -99,6 +128,7 @@ std::string HandleGet::rulemanager_page(){
   page.set_script_link("libs/js/Utils.js");
   page.set_script_link("libs/js/summary.js");
   page.set_script_link("libs/js/Modal.js");
+  page.set_script_link("libs/js/Formular.js");
   page.set_script_link("libs/js/rulemanagement.js");
 
   
@@ -134,14 +164,16 @@ std::string HandleGet::rulemanager_page(){
       <ul class="nav navbar-nav">
         <li><a href="/rulemanager">Add rule</a></li>
         <li><a href="javascript:void(0) ">Edit rule</a></li>
-        <li><a href="javascript:void(0) ">Remove rule</a></li>
+        <li><a href="javascript:removeRules() ">Remove rule</a></li>
       </ul>
     </div>
   </div>
 </div>
 <div id="about" class="well page active">
 
-<div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title">Write rule</h4></div>
+<div id="rulemngr">
+<div class="panel panel-default"><div class="panel-heading">
+<h4 class="panel-title">Write rule</h4></div>
 <div class="container-fluid">
 <div class="togglebutton">
               <label>
@@ -164,6 +196,7 @@ std::string HandleGet::rulemanager_page(){
         <span class="help-block">code style <code>select things from pattern [ sequences ]</code></span>
       </div>
 <a href="javascript:loadRuleAST() " class="btn btn-raised btn-default">Compile</a>
+</div>
 </div>
 </div>
   <div id="demo">

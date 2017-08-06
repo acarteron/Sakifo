@@ -91,6 +91,7 @@ function getSomething(callback,url){
 	// }
 	if (xhttp.readyState == 4 && xhttp.status == 200) {
 	    var myArr = JSON.parse(xhttp.responseText);
+	    document.getElementById("demo").innerHTML = "";
 	    callback(myArr);
 	}
     }
@@ -99,7 +100,7 @@ function getSomething(callback,url){
     xhttp.setRequestHeader("Data-type", "text");
     xhttp.send();
 }
-function getSomethingArgs(callback,url,args){
+function postSomething(callback,url,args){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
 	if(xhttp.readyState == 1){
@@ -121,4 +122,21 @@ function getSomethingArgs(callback,url,args){
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.setRequestHeader("Data-type", "json");
     xhttp.send(JSON.stringify(args));
+}
+function deleteSomething(callback,url){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+	if(xhttp.readyState == 1){
+		document.getElementById("demo").innerHTML = "<div class=\"wrapperloading\">  <div class=\"loading up\"></div>  <div class=\"loading down\"></div></div>";
+	}
+	if (xhttp.readyState == 4 && xhttp.status == 200) {
+	    var myArr = JSON.parse(xhttp.responseText);
+	    document.getElementById("demo").innerHTML = "";
+	    callback(myArr);
+	}
+    }
+    xhttp.open("DELETE",url, true);
+    xhttp.setRequestHeader("Content-type", "text/plain");
+    xhttp.setRequestHeader("Data-type", "text");
+    xhttp.send();
 }

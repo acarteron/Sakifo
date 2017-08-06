@@ -18,7 +18,7 @@ HandlePost::HandlePost(){
   nlohmann::json j=nlohmann::json::parse(db_param);
   mongo_host=j["mongo_host"].get<std::string>();
   mongo_port=j["mongo_port"].get<int>();
-  mongo_base=j["streams_collection"].get<std::string>();
+  mongo_stream_base=j["streams_collection"].get<std::string>();
 
   esper_srv="http://"+j["kayamb_host"].get<std::string>()+":"+Utils::toString<int>(j["kayamb_port"].get<int>());
   std::cout<<esper_srv<<std::endl;
