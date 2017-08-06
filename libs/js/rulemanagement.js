@@ -44,6 +44,7 @@ function submitedRemoveRule(args){
 	modal.addHtml("","rule could not be deleted");
     }
     document.getElementById("modals").innerHTML = modal.getModal();
+    removeRules();
     $('#myModal').modal('show');
     load_js("loadmaterial.js");
 }
