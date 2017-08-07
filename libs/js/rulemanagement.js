@@ -61,6 +61,7 @@ function rmRuleManagement(rulelst){
     for( i = 0 ; i < rulelst['rules'].length ; i++ ){
 	rulesnames.push(rulelst['rules'][i]['name']);
     }
+    rulesnames.sort();
     form.addHtml("<legend>Remove rule</legend>");
     form.addSelect("rmRuleRef",rulesnames,"rmRule");
     form.addButton({"id":"confrmRule","onclick":"confirmRemoveRule()","value":"rmRule","name":"Remove"});
