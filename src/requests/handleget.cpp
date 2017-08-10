@@ -85,7 +85,8 @@ std::string HandleGet::get_rule_list(){
   if(it!=j.end())
     rule_lst=apeters::Mongodb::get_rules(mongo_host,
 					 mongo_port,
-					 it.value().get<std::string>(),
+					 /*it.value().get<std::string>()*/
+					 "global",
 					 mongo_rule_base);
   //std::cout<<rule_lst<<std::endl;
   return "{\"rules\":"+rule_lst+"}";
