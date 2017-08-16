@@ -55,7 +55,8 @@ function displaySummary(summary){
 			var roles_array=streams_array[l].roles;
 			rule_panel_body+="<li>";
 			for(var m=0;m<roles_array.length;m++){
-			    rule_panel_body+=roles_array[m].role.location+" "+roles_array[m].role.kind+"<br>";
+			    var d_role=new Date(Number(roles_array[m].role.timestamp));
+			    rule_panel_body+=roles_array[m].role.location+" "+roles_array[m].role.kind+" "+roles_array[m].role.status+" "+formatDateTime(d_role)+"<br>";
 			}
 			var date_rule=streams_array[l].timestamp; 
 			var time_rule_inst=new Date(Number(date_rule));
