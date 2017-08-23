@@ -34,6 +34,7 @@ private:
   void poco_log(std::string);
   std::string switch_URI(Poco::Net::HTTPServerRequest& );
   std::string setRule(std::string);
+  std::string setOrder(std::string);
   bool check_content_type(std::string,std::string);
   
   std::string mongo_host="mongostr";

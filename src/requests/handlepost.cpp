@@ -66,6 +66,12 @@ std::string HandlePost::send_request(std::string req){
   rule_to_srv.setPUT();
   return rule_to_srv.send_request(req);  
 }
+std::string HandlePost::setOrder(std::string order){
+  Files file("/opt/Sati/order.json","out");
+  file.writeFile(order);
+  file.closeFile();
+  return "true";
+}
 std::string HandlePost::setRule(std::string stream){
   std::cout<<"Stream "<<stream<<std::endl;
   
@@ -146,6 +152,9 @@ std::string HandlePost::switch_URI(Poco::Net::HTTPServerRequest& request){
   if(segments[0].compare("rulemanager")==0){
     return setRule(str);    
   }else{
+    if(segments[0].compare("order")==0){
+      return setOrder(str);    
+    }else{
     // if(Utils::find_in_vector_str(segments,"StreamEvent")==0){
     //   StreamEvent ev(data::Utils::extract_StreamType(str,"StreamEvent"));
     //   //std::cout<<ev.toString()<<std::endl;
@@ -178,11 +187,12 @@ std::string HandlePost::switch_URI(Poco::Net::HTTPServerRequest& request){
     // 	      return "false";
     // 	    }
     // 	  }else{
-    return "false";
+      return "false";
     // 	  }
     // 	}
     //   }
     // }
+    }
   }
   // return false;
 }
