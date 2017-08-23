@@ -69,12 +69,23 @@ std::pair<std::string,std::string> HandleGet::switch_URI(Poco::Net::HTTPServerRe
       }else{
 	if(segments[0].compare("order")==0){
 	  return std::make_pair("application/json",get_order());
+	}else{
+	  if(segments[0].compare("taxonomy")==0){
+	    return std::make_pair("application/json",get_taxonomy());
+	  }
 	}
       }
     }
   }
   
   return get_file(URI_);
+}
+std::string HandleGet::get_taxonomy(){
+  Files file;
+  file.setFileName("/opt/Sati/taxonomy.json");
+  std::string file_ctent=file.readFile();
+  file.closeFile();
+  return file_ctent;
 }
 std::string HandleGet::get_order(){
   Files file;
@@ -148,6 +159,7 @@ std::string HandleGet::rulemanager_page(){
   page.set_script_link("libs/js/Formular.js");
   page.set_script_link("libs/js/rulemanagement.js");
   page.set_script_link("libs/js/ordermanagement.js");
+  page.set_script_link("libs/js/taxomanagement.js");
   
   page.set_script_link("https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js");
 
@@ -183,6 +195,7 @@ std::string HandleGet::rulemanager_page(){
         <li><a href="javascript:void(0) ">Edit rule</a></li>
         <li><a href="javascript:removeRules() ">Remove rule</a></li>
         <li><a href="javascript:editOrder() ">Edit rule order</a></li>
+        <li><a href="javascript:editTaxo() ">Edit taxonomy</a></li>
       </ul>
     </div>
   </div>

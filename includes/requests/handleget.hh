@@ -45,6 +45,7 @@ private:
   std::string rulemanager_page();
   std::string get_rule_list();
   std::string get_order();
+  std::string get_taxonomy();
   
   std::pair<std::string,std::string> get_file(const std::string&);
 

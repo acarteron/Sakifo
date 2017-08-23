@@ -35,6 +35,7 @@ private:
   std::string switch_URI(Poco::Net::HTTPServerRequest& );
   std::string setRule(std::string);
   std::string setOrder(std::string);
+  std::string setTaxonomy(std::string);
   bool check_content_type(std::string,std::string);
   
   std::string mongo_host="mongostr";

@@ -72,6 +72,12 @@ std::string HandlePost::setOrder(std::string order){
   file.closeFile();
   return "true";
 }
+std::string HandlePost::setTaxonomy(std::string taxo){
+  Files file("/opt/Sati/taxonomy.json","out");
+  file.writeFile(taxo);
+  file.closeFile();
+  return "true";
+}
 std::string HandlePost::setRule(std::string stream){
   std::cout<<"Stream "<<stream<<std::endl;
   
@@ -155,6 +161,9 @@ std::string HandlePost::switch_URI(Poco::Net::HTTPServerRequest& request){
     if(segments[0].compare("order")==0){
       return setOrder(str);    
     }else{
+      if(segments[0].compare("taxonomy")==0){
+	return setTaxonomy(str);    
+      }else{
     // if(Utils::find_in_vector_str(segments,"StreamEvent")==0){
     //   StreamEvent ev(data::Utils::extract_StreamType(str,"StreamEvent"));
     //   //std::cout<<ev.toString()<<std::endl;
@@ -192,6 +201,7 @@ std::string HandlePost::switch_URI(Poco::Net::HTTPServerRequest& request){
     // 	}
     //   }
     // }
+      }
     }
   }
   // return false;
